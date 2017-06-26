@@ -11,7 +11,10 @@
   "dependencies": {
     "body-parser": "^1.17.2",
     "express": "^4.15.3",
+    "express-session": "^1.15.3",
     "mongoose": "^4.10.8",
+    "passport": "^0.3.2",
+    "passport-facebook": "^2.1.1",
     "pg-promise": "^5.9.6"
   }
 }

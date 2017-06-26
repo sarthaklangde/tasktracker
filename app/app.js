@@ -1,12 +1,13 @@
 var myTodoApp = angular.module('myTodoApp',['ngRoute']);
 
-myTodoApp.config(['$routeProvider', function($routeProvider){
+myTodoApp.config(['$routeProvider','$locationProvider', function($routeProvider,$locationProvider){
+    $locationProvider.hashPrefix('');
     $routeProvider
         .when('/home',{
             templateUrl: 'views/home.html'
         })
-        .when('/directory',{
-            templateUrl: 'views/directory.html',
+        .when('/tasks',{
+            templateUrl: 'views/tasks.html',
             controller:'TodoController'
         })
         .otherwise({
