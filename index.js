@@ -8,16 +8,21 @@ const mongoose = require('mongoose');
 const passport = require('passport');
 const session = require('express-session');
 const bodyParser = require('body-parser');
-//mongoose.connect('mongodb://localhost:27017/todo');
+const flash = require('connect-flash');
+
 
 app.use(express.static('app'));
 app.use(bodyParser.json());
 
 require('./app/config/passport')(passport);
 
-app.use(session({ secret: 'shhsecret' }));  
-app.use(passport.initialize());  
-app.use(passport.session());  
+app.use(session({
+    secret: 'shhsecret',
+    resave: true,
+    saveUninitialized: true
+}));
+app.use(passport.initialize());
+app.use(passport.session());
 
 
 mongoose.connect('mongodb://localhost/todo');
@@ -39,22 +44,42 @@ const TodoSchema = new mongoose.Schema({
 	date:{
 		type: String,
 		required: [true,"Date required"]
+	},
+	user_id:{
+		type:mongoose.Schema.ObjectId,
 	}
 });
 
 const TodoModel = mongoose.model('todo',TodoSchema);
 
 //Routes
-app.get('/api', function (req, res) {
+app.post('/api/user/',function(req,res){
+	//console.log(req.body._id);
+	/*TodoModel.findById({user_id:req.body._id},function(err,tasks){
+		console.log(tasks);
+	});*/
+	TodoModel.find({user_id:req.body._id},function(err,tasks){
+		if(err) res.send({});
+		else{
+			res.send(tasks);
+		}
+	});
 	
+});
+app.get('/api', function (req, res) {
+	//req.flash('info',"got it!");
+	console.log(req.user);
 	TodoModel.find(function(err,tasks){
 		if(err) res.send({});
 		else{
 			res.send(tasks);
 		}
-	})
+	});
+	
 	
 });
+
+
 app.post('/api', function (req, res) {
 	TodoModel.create(req.body);
 	res.end();
@@ -62,12 +87,13 @@ app.post('/api', function (req, res) {
 app.put('/api/:id', function (req, res) {
 	//console.log(req.body);
 	//console.log(req.params.id);
-	TodoModel.findById({_id:req.params.id})
+	
 	TodoModel.findOneAndUpdate({_id:req.params.id},{
 		text: req.body.text,
 		start: req.body.start,
 		end:req.body.end,
-		date:req.body.date
+		date:req.body.date,
+		user_id:req.body.user_id,
 	},function(){
 		console.log("Successfully Edited");
 	});
@@ -75,18 +101,26 @@ app.put('/api/:id', function (req, res) {
 });
 
 app.delete('/api/:id', function (req, res) {
-	
-	TodoModel.find({_id:req.params.id}).remove().exec();
+	TodoModel.findByIdAndRemove(req.params.id).exec();
+	console.log("HJAHSJKAHJSK");
+	//TodoModel.findById(req.params.id).remove().exec();
 	res.end();
 });
 
 app.get('/', function (req, res) {
-	res.sendFile(_dir + 'index.html');
+	res.sendFile(__dirname + 'index.html');
 });
 
-app.get('/tasks',function(req,res){
-	
-})
+app.get('/tasks', isLoggedIn, function(req,res){
+	//	console.log(req.user);
+	res.sendFile(__dirname +'/app/tasks.html',{userid: req.user});
+});
+
+app.get('/identity', isLoggedIn, function(req,res){
+	//	console.log(req.user);
+	res.send(req.user);
+});
+
 
 app.get('/auth/facebook', passport.authenticate('facebook', { scope : ['email'] }));
 //app.get('/connect/facebook', passport.authorize('facebook', { scope : ['email'] }));
@@ -95,6 +129,10 @@ app.get('/auth/facebook/callback', passport.authenticate('facebook', {
   failureRedirect: '/',
 }));
 
+app.get('/logout', function(req, res){
+		req.logout();
+		res.redirect('/');
+	})
 //listen for requests
 app.listen(3000, function () {
 	console.log("Listening on port 3000...");
@@ -103,5 +141,6 @@ app.listen(3000, function () {
 function isLoggedIn(req, res, next) {  
   if (req.isAuthenticated())
       return next();
+  
   res.redirect('/');
 }

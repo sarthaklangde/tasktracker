@@ -18,38 +18,9 @@ var myTodoApp = angular.module('myTodoApp',[]);
 
 myTodoApp.controller('TodoController',['$scope','$http',function($scope,$http){
     $http.get('http://localhost:3000/identity').
-        then(function(respon){
-            $scope.user = respon.data;
-            $http.post('http://localhost:3000/api/user/',$scope.user).
-                then(function(response) {
-                    $scope.tasks =[];
-                    $scope.historytasks=[];
-                    var dt = new Date();
-                    var dtstr= dt.getDate()+ "/" +(dt.getMonth() +1)   + "/" + dt.getFullYear()
-                    response.data.forEach(function(task){
-                        var sttime = task.start.split(":");
-                        var entime = task.end.split(":");
-                        //console.log(sttime);
-                        var newtask = {
-                            _id: task._id,
-                            text: task.text,
-                            starthour: parseInt(sttime[0]),
-                            startmin: parseInt(sttime[1]),
-                            endhour: parseInt(entime[0]),
-                            endmin: parseInt(entime[1]),
-                            date:task.date,
-                            user_id:task.user_id
-                        };
-                        console.log(newtask);
-                        if(dtstr == newtask.date){
-                            $scope.tasks.push(newtask);
-                        }
-                        else{
-                            $scope.historytasks.push(newtask);
-                        }
-                        });
-            });
-            /*$http.get('http://localhost:3000/api/').
+        then(function(response){
+            $scope.user = response.data;
+            $http.get('http://localhost:3000/api/').
                 then(function(response) {
 
                     $scope.tasks =[];
@@ -78,11 +49,11 @@ myTodoApp.controller('TodoController',['$scope','$http',function($scope,$http){
                             $scope.historytasks.push(newtask);
                         }
                         
-                    });*/
+                    });
            // $scope.tasks = response.data;
     });
-
-   
+    
+    });
 
     $scope.editedText=function(task){
         task.editing = false;

@@ -45,7 +45,7 @@ module.exports = function(passport) {
 				return done(null, newUser);
 			});
 			
-	    	console.log(profile);
+	    	//console.log(profile);
 			}
 		});
 		});

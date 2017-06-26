@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="myTodoApp">
+
+<head>
+	<title>TheNetNinja Angular Playlist</title>
+	<!--<link href="css/styles.css" rel="stylesheet" type="text/css" />-->
+	<script src="lib/jquery.min.js"></script>
+	<link href="css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+	<script src="lib/angular.min.js"></script>
+	<script src="lib/bootstrap.min.js"></script>
+
+	<script src="lib/angular-route.min.js"></script>
+	<script src="app.js"></script>
+	<script type="text/javascript">
+		if (window.location.hash && window.location.hash == '#_=_') {
+			if (window.history && history.pushState) {
+				window.history.pushState("", document.title, window.location.pathname);
+			} else {
+				// Prevent scrolling by storing the page's current scroll offset
+				var scroll = {
+					top: document.body.scrollTop,
+					left: document.body.scrollLeft
+				};
+				window.location.hash = '';
+				// Restore the scroll offset, should be flicker free
+				document.body.scrollTop = scroll.top;
+				document.body.scrollLeft = scroll.left;
+			}
+		}
+	</script>
+</head>
+
+<body style="background-color: #e91e63">
+
+
+	<nav class="navbar navbar-default">
+		<div class="container-fluid">
+			<!-- Brand and toggle get grouped for better mobile display -->
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1"
+				 aria-expanded="false">
+					<span class="sr-only">Toggle navigation</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+      			</button>
+				<a class="navbar-brand" href="/">Task Tracker</a>
+			</div>
+
+			<!-- Collect the nav links, forms, and other content for toggling -->
+			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+
+
+				<ul class="nav navbar-nav navbar-right">
+					<li><a href="/logout">Logout</a></li>
+
+				</ul>
+			</div>
+			<!-- /.navbar-collapse -->
+		</div>
+		<!-- /.container-fluid -->
+	</nav>
+
+
+	
+	
+
+	<div class="content">
+		<div ng-controller="TodoController">
+			<!--<button ng-click="order='name'">Order by Name</button>
+		<button ng-click="order='belt'">Order by Belt</button>-->
+			<!--<input type="text" ng-model="search" placeholder="Add Item"/>-->
+			<center><h1 style="color: #fff">Welcome, {{user.name}}</h1></center>
+			<form ng-submit="addTask()">
+				<div style="padding-left:10%;padding-right:10%">
+				<div class="col-lg-12"><input type="text" class="form-control" placeholder="Task Details" ng-model="newtask.text" required/></div>
+			
+				
+				<div style="padding-top:1%" class="col-lg-3"><input class="form-control" type="number" placeholder="Start Hour" ng-model="newtask.starthour" min="0" max="23" required/></div>
+				<div style="padding-top:1%" class="col-lg-3"><input class="form-control" type="number" placeholder="Start Minutes" ng-model="newtask.startmin" min="00" max="59" required/></div>
+				
+				<div style="padding-top:1%" class="col-lg-3"><input class="form-control" type="number" placeholder="End Hour" ng-model="newtask.endhour" min="0" max="23" required/></div>
+				<div style="padding-top:1%" class="col-lg-3"><input class="form-control"type="number" placeholder="End Minutes" ng-model="newtask.endmin" min="00" max="59" required/></div>
+			
+
+
+				
+				<center>
+					<div  style="color: #fff;padding:1%" class="col-lg-12" >Total Time: {{ (newtask.endhour * 60 +newtask.endmin) - (newtask.starthour * 60 +newtask.startmin)}} minutes</div>
+					<input type="submit" class="btn btn-lg" value="Add new item" /></center>
+				</div>
+				
+			</form>
+			<div class="row" style="padding-top:2%">
+				<center><div class="row" style="padding-left:10%;padding-right:10%" ng-repeat="task in tasks">
+					<div ng-hide="task.editing" ng-dblclick="editTask(task)">
+
+						<div class="panel panel-default">
+							<div class="panel-heading">
+
+
+								<button style="float:right" class="close" ng-click="removeTask(task)">X</button>
+								<h3 class="panel-title">{{task.text}}</h3>
+								
+							</div>
+							<div class="panel-body">
+								<strong>Time:</strong> {{task.starthour}}:{{task.startmin}} - {{task.endhour}}:{{task.endmin}} |
+						<strong> Date:</strong> {{task.date | date: "dd:mm:YYYY"}}
+							</div>
+						</div>
+
+						
+						
+					</div>
+					<!--Individual Element Editing-->
+					<!--First only for task name-->
+					<div style="padding-left:3%;padding-right:3%" ng-show="task.editing">
+						<div class="col-lg-12"><input type="text" class="form-control" autofocus ng-blur="editedText(task)" ng-model="task.text"></div>
+						<div style="padding-top:1%" class="col-lg-3"><input class="form-control" type="number" autofocus ng-blur="editedText(task)" ng-model="task.starthour" min="0" max="23" required/></div>
+						<div style="padding-top:1%" class="col-lg-3"><input class="form-control" type="number" autofocus ng-blur="editedText(task)" ng-model="task.startmin" min="00" max="59" required/></div>
+						
+						<div style="padding-top:1%" class="col-lg-3"><input class="form-control" type="number" autofocus ng-blur="editedText(task)" ng-model="task.endhour" min="0" max="23" required/></div>
+						<div style="padding-top:1%" class="col-lg-3"><input class="form-control"type="number" autofocus ng-blur="editedText(task)" ng-model="task.endmin" min="00" max="59" required/></div>
+						<!--<input style="width:13%" type="number" autofocus ng-blur="editedText(task)" ng-model="task.starthour" min="0" max="23" required/>
+						<input style="width:13%" type="number" autofocus ng-blur="editedText(task)" ng-model="task.startmin" min="00" max="59" required/>
+						<input style="width:13%" type="number" autofocus ng-blur="editedText(task)" ng-model="task.endhour" min="0" max="23" required/>
+						<input style="width:13%" type="number" autofocus ng-blur="editedText(task)" ng-model="task.endmin" min="00" max="59" required/>-->
+					</div>
+				</div></center>
+			</div>
+			<center><h4 style="color: #fff">History</h4></center>
+			<div class="row" style="padding-top:1%">
+				<center><div class="row" style="padding-left:10%;padding-right:10%"  ng-repeat="task in historytasks | orderBy: '-date'">
+					<div class="panel panel-default">
+							<div class="panel-heading">
+
+
+								
+								<h3 class="panel-title">{{task.text}}</h3>
+								
+							</div>
+							<div class="panel-body">
+								<strong>Time:</strong> {{task.starthour}}:{{task.startmin}} - {{task.endhour}}:{{task.endmin}} |
+						<strong> Date:</strong> {{task.date | date: "dd:mm:YYYY"}}
+							</div>
+						</div>
+				</div></center>
+			</div>
+
+		</div>
+	</div>
+</body>
+
+</html>

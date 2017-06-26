@@ -1,9 +1,43 @@
-<div class="content">
+<!DOCTYPE html>
+<html lang="en" ng-app="myTodoApp">
+<head>
+	<title>TheNetNinja Angular Playlist</title>
+	<link href="css/styles.css" rel="stylesheet" type="text/css" />
+	<script src="lib/angular.min.js"></script>
+	<script src="lib/angular-route.min.js"></script>
+	<script src="app.js"></script>
+	<script type="text/javascript">
+    if (window.location.hash && window.location.hash == '#_=_') {
+        if (window.history && history.pushState) {
+            window.history.pushState("", document.title, window.location.pathname);
+        } else {
+            // Prevent scrolling by storing the page's current scroll offset
+            var scroll = {
+                top: document.body.scrollTop,
+                left: document.body.scrollLeft
+            };
+            window.location.hash = '';
+            // Restore the scroll offset, should be flicker free
+            document.body.scrollTop = scroll.top;
+            document.body.scrollLeft = scroll.left;
+        }
+    }
+	</script>
+</head>
+
+<body>
+	<div id="menu-bar">
+		<h1>Task Tracker</h1>
+		<ul>
+			<li><a href="/logout">Logout</a></li>
+		</ul>
+	</div>
+	<div class="content">
 	<div ng-controller="TodoController">
 		<!--<button ng-click="order='name'">Order by Name</button>
 		<button ng-click="order='belt'">Order by Belt</button>-->
 		<!--<input type="text" ng-model="search" placeholder="Add Item"/>-->
-		<h1>Add, Edit, Delete Tasks</h1>
+		<h1>Welcome, {{user.name}}</h1>
 		<form ng-submit="addTask()">
 			<input type="text" placeholder="Task Details" ng-model="newtask.text" required/>
 			<div style="width:100%">
@@ -50,3 +84,6 @@
 		
 	</div>
 </div>
+</body>
+
+</html>
