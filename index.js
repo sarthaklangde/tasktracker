@@ -25,7 +25,8 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 
-mongoose.connect('mongodb://localhost/todo');
+//mongoose.connect('mongodb://localhost/todo');
+mongoose.connect('mongodb://ngtasktrackeruser:ngtasktrackerpassword@ds135812.mlab.com:35812/ngtasktracker');
 mongoose.Promise = global.Promise;
 //Model
 const TodoSchema = new mongoose.Schema({
@@ -134,7 +135,7 @@ app.get('/logout', function(req, res){
 		res.redirect('/');
 	})
 //listen for requests
-app.listen(process.env.port || 3000, function () {
+app.listen(process.env.PORT || 3000, function () {
 	console.log("Listening on port 3000...");
 });
 
