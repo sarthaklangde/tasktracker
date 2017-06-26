@@ -103,7 +103,7 @@ app.put('/api/:id', function (req, res) {
 
 app.delete('/api/:id', function (req, res) {
 	TodoModel.findByIdAndRemove(req.params.id).exec();
-	console.log("HJAHSJKAHJSK");
+	//console.log("HJAHSJKAHJSK");
 	//TodoModel.findById(req.params.id).remove().exec();
 	res.end();
 });

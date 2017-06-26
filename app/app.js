@@ -17,10 +17,10 @@ var myTodoApp = angular.module('myTodoApp',[]);
 
 
 myTodoApp.controller('TodoController',['$scope','$http',function($scope,$http){
-    $http.get('http://localhost:3000/identity').
+    $http.get('http://ngtasktracker.herokuapp.com/identity').
         then(function(respon){
             $scope.user = respon.data;
-            $http.post('http://localhost:3000/api/user/',$scope.user).
+            $http.post('http://ngtasktracker.herokuapp.com/api/user/',$scope.user).
                 then(function(response) {
                     $scope.tasks =[];
                     $scope.historytasks=[];
@@ -98,7 +98,7 @@ myTodoApp.controller('TodoController',['$scope','$http',function($scope,$http){
             
         };
 
-        $http.put('http://localhost:3000/api/'+task._id,itemtoadd).
+        $http.put('http://ngtasktracker.herokuapp.com/api/'+task._id,itemtoadd).
             then(function(response) {
                 
         });
@@ -110,7 +110,7 @@ myTodoApp.controller('TodoController',['$scope','$http',function($scope,$http){
     }
 
     $scope.removeTask = function(task){
-        $http.delete('http://localhost:3000/api/'+task._id).
+        $http.delete('http://ngtasktracker.herokuapp.com/api/'+task._id).
             then(function(response) {
                var removedTaskIndex = $scope.tasks.indexOf(task);
                $scope.tasks.splice(removedTaskIndex, 1);
@@ -139,7 +139,7 @@ myTodoApp.controller('TodoController',['$scope','$http',function($scope,$http){
             user_id: $scope.user._id
         }
         //console.log(itemtoadd);
-        $http.post('http://localhost:3000/api/',itemtoadd).
+        $http.post('http://ngtasktracker.herokuapp.com/api/',itemtoadd).
             then(function(response) {
                 $scope.tasks.push(itemtopush);
         });
