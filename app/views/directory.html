@@ -1,0 +1,52 @@
+<div class="content">
+	<div ng-controller="TodoController">
+		<!--<button ng-click="order='name'">Order by Name</button>
+		<button ng-click="order='belt'">Order by Belt</button>-->
+		<!--<input type="text" ng-model="search" placeholder="Add Item"/>-->
+		<h1>Add, Edit, Delete Tasks</h1>
+		<form ng-submit="addTask()">
+			<input type="text" placeholder="Task Details" ng-model="newtask.text" required/>
+			<div style="width:100%">
+				<input style="width:13%" type="number"  placeholder="Start Hour" ng-model="newtask.starthour" min="0" max="23" required/>
+				<input style="width:13%" type="number"  placeholder="Start Minutes" ng-model="newtask.startmin" min="00" max="59" required/> to 
+				<input style="width:13%" type="number"  placeholder="End Hour"  ng-model="newtask.endhour" min="0" max="23" required/>
+				<input style="width:13%" type="number"  placeholder="End Minutes"  ng-model="newtask.endmin" min="00" max="59" required/>
+			</div>
+			
+			
+			<p>Total Time: {{ (newtask.endhour * 60 +newtask.endmin)  - (newtask.starthour * 60 +newtask.startmin)}} minutes</p>
+			<input type="submit" value="Add new item"/>
+		</form>
+		<ul>
+			<li ng-repeat="task in tasks">
+				<div ng-hide="task.editing" ng-dblclick="editTask(task)">
+					<h4 >{{task.text}}  </h4>
+					<div class="remove" ng-click="removeTask(task)">X</div>
+					<strong>Time:</strong> {{task.starthour}}:{{task.startmin}} -  {{task.endhour}}:{{task.endmin}} | 
+					<strong> Date:</strong> {{task.date | date: "dd:mm:YYYY"}}
+					<hr/>
+				</div>
+				<!--Individual Element Editing-->
+				<!--First only for task name-->
+				<div ng-show="task.editing">
+					<input type="text" autofocus ng-blur="editedText(task)" ng-model="task.text">
+					<input style="width:13%" type="number" autofocus ng-blur="editedText(task)" ng-model="task.starthour" min="0" max="23" required/>
+					<input style="width:13%" type="number" autofocus ng-blur="editedText(task)" ng-model="task.startmin" min="00" max="59" required/> to 
+					<input style="width:13%" type="number" autofocus ng-blur="editedText(task)" ng-model="task.endhour" min="0" max="23" required/>
+					<input style="width:13%" type="number" autofocus ng-blur="editedText(task)" ng-model="task.endmin" min="00" max="59" required/>
+				</div>
+			</li>
+		</ul>
+		<ul>
+			<li ng-repeat="task in historytasks | orderBy: '-date'">
+				<div>
+					<h4 >{{task.text}}  </h4>
+					<strong>Time:</strong> {{task.starthour}}:{{task.startmin}} -  {{task.endhour}}:{{task.endmin}} | 
+					<strong> Date:</strong> {{task.date | date: "dd:mm:YYYY"}}
+					<hr/>
+				</div>
+			</li>
+		</ul>
+		
+	</div>
+</div>
