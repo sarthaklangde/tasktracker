@@ -20,7 +20,7 @@ module.exports = function(passport) {
 	passport.use(new FacebookStrategy({  
 		clientID: '218660165321390',
 		clientSecret: '8d4543cd1e6f6b9a69de3a627f7ab1f7',
-		callbackURL: "http://localhost:3000/auth/facebook/callback",
+		callbackURL: "http://ngtasktracker.herokuapp.com/auth/facebook/callback",
 		//passReqToCallback : true,
 		profileFields: ['id', 'email', 'first_name', 'last_name'],
 	},
